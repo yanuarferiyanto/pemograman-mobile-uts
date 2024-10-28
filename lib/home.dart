@@ -250,29 +250,161 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSettings() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Pengaturan',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SwitchListTile(
-            title: const Text('Mode Gelap'),
-            value: _isDarkMode,
-            onChanged: (bool value) {
-              setState(() {
-                _isDarkMode = value;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
+Widget _buildSettings() {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: ListView(
+      children: [
+        const Text(
+          'Pengaturan',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 20),
+
+        // Notifikasi
+        SwitchListTile(
+          title: const Text('Notifikasi'),
+          subtitle: const Text('Aktifkan atau nonaktifkan notifikasi harian'),
+          value: _isNotificationEnabled,
+          onChanged: (bool value) {
+            setState(() {
+              _isNotificationEnabled = value;
+            });
+          },
+        ),
+        const Divider(),
+
+        // Bahasa yang Digunakan
+        ListTile(
+          leading: const Icon(Icons.language),
+          title: const Text('Bahasa'),
+          subtitle: Text(_selectedLanguage),
+          trailing: const Icon(Icons.arrow_forward_ios),
+          onTap: () => _showLanguageDialog(),
+        ),
+        const Divider(),
+
+        // Tema yang Dipakai
+        ListTile(
+          leading: const Icon(Icons.color_lens),
+          title: const Text('Tema'),
+          subtitle: Text(_selectedTheme),
+          trailing: const Icon(Icons.arrow_forward_ios),
+          onTap: () => _showThemeDialog(),
+        ),
+        const Divider(),
+
+        // Versi Aplikasi
+        ListTile(
+          leading: const Icon(Icons.info),
+          title: const Text('Versi Aplikasi'),
+          subtitle: const Text('v1.0.0'),
+        ),
+        const Divider(),
+
+        
+
+         // Cadangan dan Pemulihan
+        ListTile(
+          title: const Text('Cadangkan Data'),
+          leading: const Icon(Icons.backup),
+          onTap: () {
+            // Implementasikan logika cadangan
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Cadangan berhasil dibuat!')),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('Pulihkan Data'),
+          leading: const Icon(Icons.restore),
+          onTap: () {
+            // Implementasikan logika pemulihan
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Data berhasil dipulihkan!')),
+            );
+          },
+        ),
+
+        // Kontak
+        ListTile(
+          leading: const Icon(Icons.contact_mail),
+          title: const Text('Kontak'),
+          subtitle: const Text('hubungi@example.com'),
+          onTap: () {
+            // Implementasi untuk aksi kontak
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Kontak kami di: hubungi@example.com')),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+// Variabel untuk notifikasi, bahasa, dan tema
+bool _isNotificationEnabled = true;
+String _selectedLanguage = 'Indonesia';
+String _selectedTheme = 'Default';
+
+// Fungsi untuk dialog pemilihan bahasa
+void _showLanguageDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Pilih Bahasa'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ['Indonesia', 'English', 'Español']
+              .map((language) => RadioListTile<String>(
+                    title: Text(language),
+                    value: language,
+                    groupValue: _selectedLanguage,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedLanguage = value!;
+                        Navigator.pop(context);
+                      });
+                    },
+                  ))
+              .toList(),
+        ),
+      );
+    },
+  );
+}
+
+// Fungsi untuk dialog pemilihan tema
+void _showThemeDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Pilih Tema'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ['Default', 'Tema Merah', 'Tema Biru']
+              .map((theme) => RadioListTile<String>(
+                    title: Text(theme),
+                    value: theme,
+                    groupValue: _selectedTheme,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedTheme = value!;
+                        Navigator.pop(context);
+                      });
+                    },
+                  ))
+              .toList(),
+        ),
+      );
+    },
+  );
+}
+
+
 }
 
 class Habit {
